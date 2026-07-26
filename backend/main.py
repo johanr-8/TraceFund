@@ -1,0 +1,129 @@
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from passlib.context import CryptContext
+from database import engine, get_db, Base
+from models import User, FundType, Wallet
+
+Base.metadata.create_all(bind=engine)
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+app = FastAPI(title="TraceFund API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+class RegisterPayload(BaseModel):
+    name: str
+    email: str
+    password: str
+    role: str
+
+
+class LoginPayload(BaseModel):
+    email: str
+    password: str
+
+
+class IssueFundPayload(BaseModel):
+    beneficiary_id: int
+    fund_type_id: int
+    amount: float
+
+
+@app.get("/")
+def root():
+    return {"message": "TraceFund API is running"}
+
+
+@app.post("/register")
+def register(payload: RegisterPayload, db: Session = Depends(get_db)):
+    existing = db.query(User).filter(User.email == payload.email).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    user = User(
+        name=payload.name,
+        email=payload.email,
+        hashed_password=pwd_context.hash(payload.password),
+        role=payload.role,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return {"id": user.id, "name": user.name, "email": user.email, "role": user.role}
+
+
+@app.post("/login")
+def login(payload: LoginPayload, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == payload.email).first()
+    if not user or not pwd_context.verify(payload.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+
+    return {"id": user.id, "name": user.name, "email": user.email, "role": user.role}
+
+
+@app.post("/issue-fund")
+def issue_fund(payload: IssueFundPayload, db: Session = Depends(get_db)):
+    beneficiary = db.query(User).filter(User.id == payload.beneficiary_id).first()
+    if not beneficiary:
+        raise HTTPException(status_code=404, detail="Beneficiary not found")
+
+    fund_type = db.query(FundType).filter(FundType.id == payload.fund_type_id).first()
+    if not fund_type:
+        raise HTTPException(status_code=404, detail="Fund type not found")
+
+    if payload.amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be positive")
+
+    wallet = db.query(Wallet).filter(
+        Wallet.user_id == payload.beneficiary_id,
+        Wallet.fund_type_id == payload.fund_type_id,
+    ).first()
+
+    if wallet:
+        wallet.balance += payload.amount
+    else:
+        wallet = Wallet(user_id=payload.beneficiary_id, fund_type_id=payload.fund_type_id, balance=payload.amount)
+        db.add(wallet)
+
+    db.commit()
+    db.refresh(wallet)
+    return {"wallet_id": wallet.id, "user_id": wallet.user_id, "fund_type": fund_type.name, "balance": wallet.balance}
+
+
+@app.get("/fund-types")
+def list_fund_types(db: Session = Depends(get_db)):
+    types = db.query(FundType).all()
+    return [{"id": t.id, "name": t.name, "description": t.description} for t in types]
+
+
+@app.get("/users")
+def list_users(role: str | None = None, db: Session = Depends(get_db)):
+    q = db.query(User)
+    if role:
+        q = q.filter(User.role == role)
+    users = q.all()
+    return [{"id": u.id, "name": u.name, "email": u.email, "role": u.role} for u in users]
+
+
+@app.get("/wallet/{user_id}")
+def get_wallet(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    wallets = db.query(Wallet).filter(Wallet.user_id == user_id).all()
+    balances = []
+    for w in wallets:
+        ft = db.query(FundType).filter(FundType.id == w.fund_type_id).first()
+        balances.append({"fund_type": ft.name if ft else "Unknown", "balance": w.balance})
+
+    return {"user_id": user.id, "user_name": user.name, "balances": balances}
