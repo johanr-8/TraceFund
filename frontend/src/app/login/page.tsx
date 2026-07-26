@@ -4,8 +4,7 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card/Card";
 import { Button } from "@/components/ui/Button/Button";
-
-const API = "http://localhost:8000";
+import { API_URL } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,7 +16,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    const res = await fetch(`${API}/login`, {
+    const res = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),

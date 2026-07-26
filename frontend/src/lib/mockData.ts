@@ -1,6 +1,6 @@
 // Mock data and types for the frontend
 
-export type Category = 'Food' | 'Medicine' | 'Education' | 'Housing' | 'Electronics';
+export type Category = 'Food' | 'Medicine' | 'Education';
 
 export interface Transaction {
   id: string;
@@ -44,7 +44,6 @@ export const MOCK_VENDORS = [
   { id: 'v-001', name: 'Fresh Grocers', category: 'Food', address: '0x123...abc' },
   { id: 'v-002', name: 'City Pharmacy', category: 'Medicine', address: '0x456...def' },
   { id: 'v-003', name: 'PharmaCorp', category: 'Medicine', address: '0x789...ghi' },
-  { id: 'v-004', name: 'TechStore', category: 'Electronics', address: '0x999...zzz' },
   { id: 'v-005', name: 'National Bookstore', category: 'Education', address: '0xabc...123' },
 ];
 
@@ -60,6 +59,4 @@ export const MOCK_AGGREGATE_DATA = [
   { category: 'Food', allocated: 5000000, spent: 3200000 },
   { category: 'Medicine', allocated: 2500000, spent: 1800000 },
   { category: 'Education', allocated: 8000000, spent: 4500000 },
-  { category: 'Housing', allocated: 12000000, spent: 11000000 },
-  { category: 'Electronics', allocated: 1000000, spent: 250000 },
 ];

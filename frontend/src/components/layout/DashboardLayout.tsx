@@ -71,9 +71,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, role
           <div className={styles.userProfile}>
             <span>{user ? `${user.name} (${user.role})` : 'Loading...'}</span>
             <div className={styles.avatar}>{initials}</div>
-            <Link href="/" onClick={() => { localStorage.removeItem("user"); }} style={{ marginLeft: '1rem', fontSize: '0.875rem', color: 'var(--accent-danger)' }}>
+            <button onClick={() => { localStorage.removeItem("user"); router.push("/"); }} style={{ marginLeft: '1rem', fontSize: '0.875rem', color: 'var(--accent-danger)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-family)' }}>
               Logout
-            </Link>
+            </button>
           </div>
         </header>
         <div className={styles.content}>

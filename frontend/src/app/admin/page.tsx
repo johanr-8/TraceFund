@@ -4,8 +4,7 @@ import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card/Card";
 import { Button } from "@/components/ui/Button/Button";
-
-const API = "http://localhost:8000";
+import { API_URL } from "@/lib/api";
 
 export default function AdminPage() {
   const router = useRouter();
@@ -15,6 +14,7 @@ export default function AdminPage() {
   const [fundTypeId, setFundTypeId] = useState("");
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const raw = localStorage.getItem("user");
@@ -22,19 +22,20 @@ export default function AdminPage() {
     const user = JSON.parse(raw);
     if (user.role !== "government") { router.push("/beneficiary"); return; }
 
-    fetch(`${API}/users?role=beneficiary`)
-      .then((r) => r.json())
-      .then(setBeneficiaries);
-    fetch(`${API}/fund-types`)
-      .then((r) => r.json())
-      .then(setFundTypes);
+    Promise.all([
+      fetch(`${API_URL}/users?role=beneficiary`).then(r => r.json()),
+      fetch(`${API_URL}/fund-types`).then(r => r.json()),
+    ]).then(([b, f]) => {
+      setBeneficiaries(b);
+      setFundTypes(f);
+    }).finally(() => setLoading(false));
   }, [router]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setMessage("");
 
-    const res = await fetch(`${API}/issue-fund`, {
+    const res = await fetch(`${API_URL}/issue-fund`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -52,6 +53,8 @@ export default function AdminPage() {
       setMessage(`Error: ${data.detail}`);
     }
   }
+
+  if (loading) return <div style={{ textAlign: "center", padding: "4rem", color: "var(--text-secondary)" }}>Loading...</div>;
 
   return (
     <div style={{ maxWidth: 600, margin: "2rem auto", padding: "0 1rem" }}>
@@ -89,7 +92,7 @@ export default function AdminPage() {
             </div>
             <Button type="submit" fullWidth>Issue Fund</Button>
           </form>
-          {message && <p style={{ marginTop: "1rem", padding: "0.75rem 1rem", borderRadius: "var(--radius-md)", background: "rgba(52, 211, 153, 0.15)", color: "var(--accent-success)" }}>{message}</p>}
+          {message && <p style={{ marginTop: "1rem", padding: "0.75rem 1rem", borderRadius: "var(--radius-md)", background: message.startsWith("Error") ? "rgba(248, 113, 113, 0.15)" : "rgba(52, 211, 153, 0.15)", color: message.startsWith("Error") ? "var(--accent-danger)" : "var(--accent-success)" }}>{message}</p>}
         </CardContent>
       </Card>
     </div>

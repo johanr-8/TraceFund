@@ -43,11 +43,18 @@ def root():
     return {"message": "TraceFund API is running"}
 
 
+VALID_ROLES = {"government", "beneficiary", "vendor", "auditor"}
+
 @app.post("/register")
 def register(payload: RegisterPayload, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.email == payload.email).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
+
+    if payload.role not in VALID_ROLES:
+        raise HTTPException(status_code=400, detail="Invalid role")
+    if len(payload.password) < 4:
+        raise HTTPException(status_code=400, detail="Password must be at least 4 characters")
 
     user = User(
         name=payload.name,
@@ -75,6 +82,8 @@ def issue_fund(payload: IssueFundPayload, db: Session = Depends(get_db)):
     beneficiary = db.query(User).filter(User.id == payload.beneficiary_id).first()
     if not beneficiary:
         raise HTTPException(status_code=404, detail="Beneficiary not found")
+    if beneficiary.role != "beneficiary":
+        raise HTTPException(status_code=400, detail="Can only issue funds to beneficiary role")
 
     fund_type = db.query(FundType).filter(FundType.id == payload.fund_type_id).first()
     if not fund_type:

@@ -126,3 +126,22 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 - Added negative-amount validation on `/issue-fund`
 - Added `*.db` to `.gitignore`
 - No blockchain, fraud detection, or vendor features yet
+
+### Session 4 (UI Overhaul + Auth Improvements)
+- Imported polished dark-theme UI from external sample (glassmorphism, sidebar layout, floating cards)
+- New pages from sample: `/beneficiary` (wallet), `/beneficiary/pay`, `/beneficiary/history`, `/vendor/*` (4 pages), `/auditor/*` (2 pages), `/public` (transparency dashboard)
+- Reusable components: Button, Card, Input, Table, StatusBadge, DashboardLayout
+- Kept our custom pages (login, register, admin) restyled to match dark theme
+- Login redirects to `/beneficiary` instead of `/wallet`; `/wallet` route removed
+- DashboardLayout now reads user from localStorage (not hardcoded)
+- Landing page Government card now links to `/admin`
+- Fixed: wallet page shows **real backend data** instead of mockData.ts
+- Fixed: logout uses button (not Link) so localStorage clears reliably
+- Fixed: register validates role + minimum password length (4 chars)
+- Fixed: issue-fund rejects if recipient isn't a "beneficiary" role
+- Created `src/lib/api.ts` — single API_URL config instead of hardcoded per page
+- Added loading states to admin and wallet pages
+- Cleaned mock data categories to match backend (Food, Medicine, Education only)
+- Removed unused default Next.js SVGs from public/
+- Updated favicon from Next.js default to custom emoji icon
+- Pushed to GitHub (https://github.com/johanr-8/TraceFund)
