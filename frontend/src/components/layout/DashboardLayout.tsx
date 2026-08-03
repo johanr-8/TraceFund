@@ -7,7 +7,7 @@ import styles from './DashboardLayout.module.css';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  role: 'beneficiary' | 'vendor' | 'auditor';
+  role: 'beneficiary' | 'vendor' | 'auditor' | 'government';
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, role }) => {
@@ -28,9 +28,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, role
     { name: 'Dashboard', path: '/vendor' },
     { name: 'Receive Payment', path: '/vendor/receive' },
     { name: 'Register Business', path: '/vendor/register' },
-  ] : [
+  ] : role === 'auditor' ? [
     { name: 'Fraud Dashboard', path: '/auditor' },
     { name: 'Transaction Trail', path: '/auditor/trail' },
+  ] : [
+    { name: 'Issue Fund', path: '/admin' },
   ];
 
   const initials = user ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '?';

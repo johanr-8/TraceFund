@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from database import engine, get_db, Base
-from models import User, FundType, Wallet
+from models import User, FundType, Wallet, Vendor, Transaction
 
 Base.metadata.create_all(bind=engine)
 
@@ -36,6 +36,19 @@ class IssueFundPayload(BaseModel):
     beneficiary_id: int
     fund_type_id: int
     amount: float
+
+
+class SpendPayload(BaseModel):
+    sender_id: int
+    vendor_id: int
+    fund_type_id: int
+    amount: float
+
+
+class VendorPayload(BaseModel):
+    name: str
+    category: str
+    address: str = ""
 
 
 @app.get("/")
@@ -136,3 +149,93 @@ def get_wallet(user_id: int, db: Session = Depends(get_db)):
         balances.append({"fund_type": ft.name if ft else "Unknown", "balance": w.balance})
 
     return {"user_id": user.id, "user_name": user.name, "balances": balances}
+
+
+@app.post("/vendors")
+def register_vendor(payload: VendorPayload, db: Session = Depends(get_db)):
+    vendor = Vendor(name=payload.name, category=payload.category, address=payload.address, approved=True)
+    db.add(vendor)
+    db.commit()
+    db.refresh(vendor)
+    return {"id": vendor.id, "name": vendor.name, "category": vendor.category, "approved": vendor.approved}
+
+
+@app.get("/vendors")
+def list_vendors(category: str | None = None, db: Session = Depends(get_db)):
+    q = db.query(Vendor)
+    if category:
+        q = q.filter(Vendor.category == category)
+    vendors = q.all()
+    return [{"id": v.id, "name": v.name, "category": v.category, "address": v.address, "approved": v.approved} for v in vendors]
+
+
+@app.post("/spend")
+def spend(payload: SpendPayload, db: Session = Depends(get_db)):
+    sender = db.query(User).filter(User.id == payload.sender_id).first()
+    if not sender or sender.role != "beneficiary":
+        raise HTTPException(status_code=400, detail="Invalid sender")
+
+    vendor = db.query(Vendor).filter(Vendor.id == payload.vendor_id).first()
+    if not vendor:
+        raise HTTPException(status_code=404, detail="Vendor not found")
+
+    fund_type = db.query(FundType).filter(FundType.id == payload.fund_type_id).first()
+    if not fund_type:
+        raise HTTPException(status_code=404, detail="Fund type not found")
+
+    if vendor.category != fund_type.name:
+        raise HTTPException(status_code=400, detail=f"Vendor not approved for {fund_type.name}")
+
+    if payload.amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be positive")
+
+    wallet = db.query(Wallet).filter(
+        Wallet.user_id == payload.sender_id,
+        Wallet.fund_type_id == payload.fund_type_id,
+    ).first()
+
+    if not wallet or wallet.balance < payload.amount:
+        raise HTTPException(status_code=400, detail="Insufficient balance")
+
+    wallet.balance -= payload.amount
+    tx = Transaction(
+        sender_id=payload.sender_id,
+        vendor_id=payload.vendor_id,
+        fund_type_id=payload.fund_type_id,
+        amount=payload.amount,
+        status="Approved",
+    )
+    db.add(tx)
+    db.commit()
+    db.refresh(tx)
+    return {
+        "transaction_id": tx.id,
+        "amount": tx.amount,
+        "fund_type": fund_type.name,
+        "vendor": vendor.name,
+        "status": tx.status,
+        "remaining_balance": wallet.balance,
+    }
+
+
+@app.get("/transactions")
+def list_transactions(user_id: int | None = None, vendor_id: int | None = None, db: Session = Depends(get_db)):
+    q = db.query(Transaction)
+    if user_id:
+        q = q.filter(Transaction.sender_id == user_id)
+    if vendor_id:
+        q = q.filter(Transaction.vendor_id == vendor_id)
+    txs = q.order_by(Transaction.created_at.desc()).all()
+    result = []
+    for t in txs:
+        ft = db.query(FundType).filter(FundType.id == t.fund_type_id).first()
+        v = db.query(Vendor).filter(Vendor.id == t.vendor_id).first()
+        result.append({
+            "id": t.id,
+            "amount": t.amount,
+            "fund_type": ft.name if ft else "Unknown",
+            "vendor_name": v.name if v else "Unknown",
+            "status": t.status,
+            "date": t.created_at.isoformat() if t.created_at else "",
+        })
+    return result

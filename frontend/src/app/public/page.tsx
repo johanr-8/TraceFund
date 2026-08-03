@@ -21,15 +21,14 @@ export default function PublicDashboard() {
         
         {/* Total Utilization Overview */}
         <Card style={{ 
-          background: 'rgba(15, 23, 42, 0.8)', 
-          backdropFilter: 'blur(16px)',
-          border: '2px solid rgba(6, 182, 212, 0.6)',
-          boxShadow: '0 0 40px rgba(6, 182, 212, 0.3), inset 0 0 20px rgba(6, 182, 212, 0.1)'
+          background: 'rgba(15, 23, 42, 0.6)', 
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(6, 182, 212, 0.3)',
         }}>
-          <CardContent style={{ padding: '3rem', textAlign: 'center' }}>
-            <h2 style={{ fontSize: '1.5rem', opacity: 0.9, marginBottom: '1rem' }}>Total Network Utilization</h2>
-            <div style={{ fontSize: '4rem', fontWeight: 700, marginBottom: '1rem', letterSpacing: '-0.02em' }}>
-              ${(totalSpent / 1000000).toFixed(2)}M / ${(totalAllocated / 1000000).toFixed(2)}M
+          <CardContent style={{ padding: '2.5rem', textAlign: 'center' }}>
+            <h2 style={{ fontSize: '1.25rem', opacity: 0.9, marginBottom: '1rem' }}>Total Network Utilization</h2>
+            <div style={{ fontSize: '3rem', fontWeight: 700, marginBottom: '1rem', letterSpacing: '-0.02em' }}>
+              ₹{(totalSpent / 1000000).toFixed(2)}M / ₹{(totalAllocated / 1000000).toFixed(2)}M
             </div>
             
             <div style={{ height: '16px', background: 'rgba(255,255,255,0.2)', borderRadius: '8px', overflow: 'hidden', maxWidth: '800px', margin: '0 auto' }}>
@@ -60,8 +59,8 @@ export default function PublicDashboard() {
                   </CardHeader>
                   <CardContent>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', fontSize: '1.1rem' }}>
-                      <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>${(data.spent / 1000000).toFixed(1)}M Spent</span>
-                      <span style={{ color: 'var(--text-secondary)' }}>${(data.allocated / 1000000).toFixed(1)}M Total</span>
+                      <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>₹{(data.spent / 1000000).toFixed(1)}M Spent</span>
+                      <span style={{ color: 'var(--text-secondary)' }}>₹{(data.allocated / 1000000).toFixed(1)}M Total</span>
                     </div>
                     <div style={{ height: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '5px', overflow: 'hidden' }}>
                       <div 

@@ -20,7 +20,7 @@ export default function VendorDashboard() {
         }}>
           <CardContent style={{ padding: '2rem' }}>
             <p style={{ opacity: 0.9, fontSize: '1.1rem', marginBottom: '0.5rem' }}>Total Settled (Today)</p>
-            <h2 style={{ fontSize: '3rem', fontWeight: 700 }}>${totalSettled.toFixed(2)}</h2>
+            <h2 style={{ fontSize: '3rem', fontWeight: 700 }}>₹{totalSettled.toFixed(2)}</h2>
           </CardContent>
         </Card>
         
@@ -60,7 +60,7 @@ export default function VendorDashboard() {
                   <TableCell style={{ color: 'var(--text-secondary)' }}>{tx.date}</TableCell>
                   <TableCell>Beneficiary ID: {tx.id.substring(3)}...</TableCell>
                   <TableCell>{tx.category}</TableCell>
-                  <TableCell style={{ fontWeight: 600 }}>${tx.amount.toFixed(2)}</TableCell>
+                  <TableCell style={{ fontWeight: 600 }}>₹{tx.amount.toFixed(2)}</TableCell>
                   <TableCell>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', alignItems: 'flex-start' }}>
                       <StatusBadge status={tx.status} />

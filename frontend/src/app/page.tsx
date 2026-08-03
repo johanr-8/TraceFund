@@ -1,171 +1,125 @@
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card/Card';
+import { Card } from '@/components/ui/Card/Card';
 import { Button } from '@/components/ui/Button/Button';
 
 export default function Home() {
-  return (
-    <div style={{ 
-      position: 'relative', 
-      minHeight: '100vh', 
-      width: '100%',
-      overflow: 'hidden',
-      backgroundImage: 'url("/bg-map.jpg")',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      color: 'white'
-    }}>
-      
-      {/* Dark overlay to ensure text readability */}
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 0 }} />
+  const smallCards = [
+    {
+      href: "/vendor",
+      title: "Vendor Portal",
+      desc: "Register your business, accept restricted token payments via QR, and view real-time settlements.",
+      btn: "Login as Vendor",
+      accent: "rgba(255,255,255,0.5)",
+      icon: <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>,
+      icon2: <polyline points="9 22 9 12 15 12 15 22"></polyline>,
+    },
+    {
+      href: "/public",
+      title: "Public Transparency",
+      desc: "View real-time, category-wise aggregate fund utilization statistics across the network.",
+      btn: "View Public Data",
+      accent: "#34d399",
+      icon: <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>,
+      icon2: <path d="M22 12A10 10 0 0 0 12 2v10z"></path>,
+    },
+    {
+      href: "/auditor",
+      title: "Auditor Portal",
+      desc: "Monitor high-risk transactions with the Fraud Engine and view the full compliance ledger.",
+      btn: "Login as Auditor",
+      accent: "#f87171",
+      icon: <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>,
+      icon2: null,
+    },
+    {
+      href: "/admin",
+      title: "Government Portal",
+      desc: "Manage funding allocations, define restricted categories, and oversee the entire distribution network.",
+      btn: "Login as Issuer",
+      accent: "#a855f7",
+      icon: <path d="M3 21h18"></path>,
+      icon2: <path d="M12 3L3 10V21"></path>,
+    },
+  ];
 
-      {/* Header / Title */}
-      <div className="animate-fade-in" style={{ position: 'absolute', top: '5%', left: '5%', zIndex: 10 }}>
-        <h1 className="text-gradient" style={{ fontSize: '3.5rem', marginBottom: '0.5rem', letterSpacing: '-0.02em', textAlign: 'left' }}>TraceFund</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '400px', lineHeight: 1.5 }}>
+  return (
+    <div style={{
+      minHeight: "100vh",
+      width: "100%",
+      backgroundImage: 'url("/bg-map.jpg")',
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      color: "white",
+      display: "flex",
+      flexDirection: "column",
+    }}>
+      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 0 }} />
+
+      <div className="animate-fade-in" style={{ position: "relative", zIndex: 10, padding: "2rem 3rem 0" }}>
+        <h1 className="text-gradient" style={{ fontSize: "2.5rem", marginBottom: "0.25rem", letterSpacing: "-0.02em" }}>TraceFund</h1>
+        <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", maxWidth: "500px" }}>
           Blockchain-Based Transparent Fund Disbursement and Fraud Detection System
         </p>
       </div>
 
-      {/* Portal Cards */}
-      <div style={{ zIndex: 10, position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        
-        {/* Beneficiary Portal */}
-        <div className="animate-float" style={{ animationDelay: '0s', position: 'absolute', top: '30%', left: '5%', pointerEvents: 'auto' }}>
-          <Card style={{ 
-            width: '420px', 
-            background: 'rgba(15, 23, 42, 0.8)', 
-            backdropFilter: 'blur(16px)',
-            border: '2px solid rgba(6, 182, 212, 0.6)',
-            boxShadow: '0 0 40px rgba(6, 182, 212, 0.3), inset 0 0 20px rgba(6, 182, 212, 0.1)',
-            borderRadius: '24px'
+      <div style={{
+        position: "relative", zIndex: 10,
+        display: "flex", gap: "1.5rem",
+        padding: "2rem 3rem", flex: 1, alignItems: "stretch",
+      }}>
+        <div className="animate-fade-in" style={{ flex: "1 1 420px", maxWidth: "440px", display: "flex" }}>
+          <Card style={{
+            background: "rgba(15, 23, 42, 0.7)",
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(6, 182, 212, 0.4)",
+            borderRadius: "24px",
+            width: "100%",
           }}>
-            <div style={{ padding: '2rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(6, 182, 212, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#06b6d4' }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <div style={{ padding: "2.5rem", display: "flex", flexDirection: "column", height: "100%" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.75rem" }}>
+                <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "rgba(6, 182, 212, 0.12)", display: "flex", alignItems: "center", justifyContent: "center", color: "#06b6d4" }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Beneficiary Portal</h2>
+                <h2 style={{ fontSize: "1.35rem", fontWeight: 600 }}>Beneficiary Portal</h2>
               </div>
-              <div style={{ width: '40px', height: '3px', background: '#06b6d4', marginBottom: '1.5rem', borderRadius: '2px' }} />
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', lineHeight: 1.6, fontSize: '0.95rem' }}>
+              <div style={{ width: "35px", height: "2px", background: "#06b6d4", marginBottom: "1rem", borderRadius: "2px", opacity: 0.5 }} />
+              <p style={{ color: "var(--text-secondary)", marginBottom: "2rem", lineHeight: 1.6, fontSize: "0.9rem", flex: 1 }}>
                 Access your wallet, view balances by allocated category, and pay approved vendors securely.
               </p>
-              <Link href="/beneficiary" style={{ width: '100%', display: 'block' }}>
-                <Button fullWidth style={{ background: '#06b6d4', color: 'black', fontWeight: 700, borderRadius: '12px' }}>Login as Beneficiary</Button>
+              <Link href="/beneficiary" style={{ width: "100%", display: "block" }}>
+                <Button fullWidth style={{ borderRadius: "10px" }}>Login as Beneficiary</Button>
               </Link>
             </div>
           </Card>
         </div>
 
-        {/* Vendor Portal */}
-        <div className="animate-float" style={{ animationDelay: '1s', position: 'absolute', top: '15%', left: '42%', pointerEvents: 'auto' }}>
-          <Card style={{ 
-            width: '340px', 
-            background: 'rgba(15, 23, 42, 0.7)', 
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '20px'
-          }}>
-            <div style={{ padding: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <div style={{ flex: "1 1 380px", display: "flex", flexDirection: "column", gap: "1rem", minWidth: 0 }}>
+          {smallCards.map((c, i) => (
+            <div key={i} className="animate-fade-in" style={{ animationDelay: `${i * 0.1}s`, flex: 1, display: "flex" }}>
+              <Card style={{
+                background: "rgba(15, 23, 42, 0.7)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "16px",
+                width: "100%",
+              }}>
+                <div style={{ padding: "1rem 1.25rem", display: "flex", alignItems: "center", gap: "1rem", height: "100%" }}>
+                  <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", color: c.accent, flexShrink: 0 }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{c.icon}{c.icon2}</svg>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h2 style={{ fontSize: "0.95rem", fontWeight: 600, marginBottom: "0.15rem" }}>{c.title}</h2>
+                    <p style={{ color: "var(--text-secondary)", fontSize: "0.75rem", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{c.desc}</p>
+                  </div>
+                  <Link href={c.href} style={{ flexShrink: 0 }}>
+                    <Button variant="secondary" style={{ borderRadius: "8px", padding: "0.5rem 1rem", fontSize: "0.8rem", whiteSpace: "nowrap" }}>{c.btn}</Button>
+                  </Link>
                 </div>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Vendor Portal</h2>
-              </div>
-              <div style={{ width: '30px', height: '2px', background: 'rgba(255,255,255,0.3)', marginBottom: '1.25rem', borderRadius: '2px' }} />
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: 1.5, fontSize: '0.85rem' }}>
-                Register your business, accept restricted token payments via QR, and view real-time settlements.
-              </p>
-              <Link href="/vendor" style={{ width: '100%', display: 'block' }}>
-                <Button fullWidth variant="secondary" style={{ borderRadius: '10px' }}>Login as Vendor</Button>
-              </Link>
+              </Card>
             </div>
-          </Card>
+          ))}
         </div>
-
-        {/* Public Transparency */}
-        <div className="animate-float" style={{ animationDelay: '2.5s', position: 'absolute', top: '15%', right: '5%', pointerEvents: 'auto' }}>
-          <Card style={{ 
-            width: '340px', 
-            background: 'rgba(15, 23, 42, 0.7)', 
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '20px'
-          }}>
-            <div style={{ padding: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(52, 211, 153, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-success)' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
-                </div>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Public Transparency</h2>
-              </div>
-              <div style={{ width: '30px', height: '2px', background: 'rgba(255,255,255,0.3)', marginBottom: '1.25rem', borderRadius: '2px' }} />
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: 1.5, fontSize: '0.85rem' }}>
-                View real-time, category-wise aggregate fund utilization statistics across the network.
-              </p>
-              <Link href="/public" style={{ width: '100%', display: 'block' }}>
-                <Button fullWidth variant="secondary" style={{ borderRadius: '10px' }}>View Public Data</Button>
-              </Link>
-            </div>
-          </Card>
-        </div>
-
-        {/* Auditor Portal */}
-        <div className="animate-float" style={{ animationDelay: '1.5s', position: 'absolute', bottom: '10%', right: '35%', pointerEvents: 'auto' }}>
-          <Card style={{ 
-            width: '340px', 
-            background: 'rgba(15, 23, 42, 0.7)', 
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '20px'
-          }}>
-            <div style={{ padding: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(248, 113, 113, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-danger)' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                </div>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Auditor Portal</h2>
-              </div>
-              <div style={{ width: '30px', height: '2px', background: 'rgba(248, 113, 113, 0.5)', marginBottom: '1.25rem', borderRadius: '2px' }} />
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: 1.5, fontSize: '0.85rem' }}>
-                Monitor high-risk transactions with the Fraud Engine and view the full compliance ledger.
-              </p>
-              <Link href="/auditor" style={{ width: '100%', display: 'block' }}>
-                <Button fullWidth variant="secondary" style={{ borderRadius: '10px' }}>Login as Auditor</Button>
-              </Link>
-            </div>
-          </Card>
-        </div>
-
-        {/* Government Portal */}
-        <div className="animate-float" style={{ animationDelay: '3s', position: 'absolute', bottom: '15%', right: '5%', pointerEvents: 'auto' }}>
-          <Card style={{ 
-            width: '340px', 
-            background: 'rgba(15, 23, 42, 0.7)', 
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '20px'
-          }}>
-            <div style={{ padding: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(168, 85, 247, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a855f7' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18"></path><path d="M12 3L3 10V21"></path><path d="M21 10L12 3"></path><path d="M9 21v-6h6v6"></path><path d="M12 10v4"></path></svg>
-                </div>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Government Portal</h2>
-              </div>
-              <div style={{ width: '30px', height: '2px', background: '#a855f7', marginBottom: '1.25rem', borderRadius: '2px' }} />
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: 1.5, fontSize: '0.85rem' }}>
-                Manage funding allocations, define restricted categories, and oversee the entire distribution network.
-              </p>
-                <Link href="/admin" style={{ width: '100%', display: 'block' }}>
-                  <Button fullWidth variant="secondary" style={{ borderRadius: '10px' }}>Login as Issuer</Button>
-                </Link>
-            </div>
-          </Card>
-        </div>
-
       </div>
     </div>
   );

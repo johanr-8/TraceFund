@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, UniqueConstraint, Boolean
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -40,3 +40,26 @@ class Wallet(Base):
     fund_type = relationship("FundType")
 
     __table_args__ = (UniqueConstraint("user_id", "fund_type_id", name="uq_user_fund_type"),)
+
+
+class Vendor(Base):
+    __tablename__ = "vendors"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    category = Column(String, nullable=False)
+    address = Column(String, default="")
+    approved = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    vendor_id = Column(Integer, ForeignKey("vendors.id"), nullable=False)
+    fund_type_id = Column(Integer, ForeignKey("fund_types.id"), nullable=False)
+    amount = Column(Float, nullable=False)
+    status = Column(String, default="Approved")
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))

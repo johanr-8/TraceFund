@@ -75,7 +75,7 @@ export default function AuditorDashboard() {
                   </TableCell>
                   <TableCell style={{ fontFamily: 'var(--font-mono)' }}>{tx.id}</TableCell>
                   <TableCell>{tx.vendorName}<br/><span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Ben: {tx.beneficiaryId}</span></TableCell>
-                  <TableCell style={{ fontWeight: 600 }}>${tx.amount.toFixed(2)}</TableCell>
+                  <TableCell style={{ fontWeight: 600 }}>₹{tx.amount.toFixed(2)}</TableCell>
                   <TableCell style={{ color: 'var(--accent-danger)' }}>{tx.reason}</TableCell>
                   <TableCell>
                     <InvestigateButton txId={tx.id} />

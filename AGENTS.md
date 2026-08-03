@@ -77,19 +77,26 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 
 ## Development Status
 - [x] Backend project scaffold (FastAPI)
-- [ ] Database schema / models
+- [x] Database schema / models (User, Wallet, FundType)
 - [ ] Solidity smart contracts
 - [ ] Web3.py integration
-- [ ] Rules Engine
+- [ ] Rules Engine (basic category-match in issue-fund)
 - [ ] Fraud Detection module
-- [ ] REST API endpoints
+- [x] REST API endpoints (register, login, issue-fund, fund-types, users, wallet)
 - [x] Frontend project scaffold
-- [ ] Wallet Management UI
-- [ ] Government Admin Dashboard UI
-- [ ] Public Transparency Dashboard UI
-- [ ] Vendor Registration UI
+- [x] Wallet Management UI (shows real backend data)
+- [x] Government Admin Dashboard UI (issue fund form)
+- [ ] Public Transparency Dashboard UI (mock data only)
+- [x] Vendor Registration UI (mock data only)
 - [ ] Vendor Approval UI
-- [ ] Auditor Dashboard UI
+- [x] Auditor Dashboard UI (mock data only)
+
+## Next Up (Priority Order)
+1. **Beneficiary → Spend flow** — wire `/beneficiary/pay` to a real backend endpoint. This is the core feature of the project's pitch. Needs: new `POST /spend` endpoint, Vendors table model, vendor registration backend.
+2. **Vendor registration backend** — `POST /vendors`, `GET /vendors` endpoints to support the spend flow.
+3. **Transaction history** — store transactions in DB, serve via API, display on `/beneficiary/history`.
+4. **Wire remaining mock pages to real backend** — `/public`, `/vendor/*`, `/auditor/*`
+5. **Blockchain integration** — Solidity contracts + Web3.py (future sprint)
 
 ---
 

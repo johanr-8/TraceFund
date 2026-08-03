@@ -37,12 +37,11 @@
 .primary {
   background: var(--gradient-brand);
   color: white;
-  box-shadow: 0 4px 14px 0 rgba(var(--accent-primary-rgb), 0.4);
+  box-shadow: 0 2px 8px 0 rgba(var(--accent-primary-rgb), 0.2);
 }
 
 .primary:hover {
-  box-shadow: var(--shadow-glow-strong);
-  transform: translateY(-2px);
+  box-shadow: 0 2px 12px 0 rgba(var(--accent-primary-rgb), 0.25);
 }
 
 .secondary {
@@ -56,8 +55,6 @@
 .secondary:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: var(--border-light-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .danger {

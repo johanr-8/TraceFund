@@ -35,7 +35,7 @@ export default function AuditorTrail() {
                   <TableCell>{tx.beneficiaryId}</TableCell>
                   <TableCell>{tx.vendorName}</TableCell>
                   <TableCell>{tx.category}</TableCell>
-                  <TableCell style={{ fontWeight: 600 }}>${tx.amount.toFixed(2)}</TableCell>
+                  <TableCell style={{ fontWeight: 600 }}>₹{tx.amount.toFixed(2)}</TableCell>
                   <TableCell>
                     <StatusBadge status={tx.status} />
                   </TableCell>

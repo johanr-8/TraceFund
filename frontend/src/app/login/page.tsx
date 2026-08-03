@@ -53,6 +53,10 @@ export default function LoginPage() {
             <Button type="submit" fullWidth>Login</Button>
             {error && <p style={{ color: "var(--accent-danger)", fontSize: "0.9rem" }}>{error}</p>}
           </form>
+          <p style={{ textAlign: "center", marginTop: "1.5rem", color: "var(--text-secondary)", fontSize: "0.9rem" }}>
+            Don&apos;t have an account?{" "}
+            <a href="/register" style={{ color: "var(--accent-primary)", textDecoration: "underline", cursor: "pointer" }}>Register</a>
+          </p>
         </CardContent>
       </Card>
     </div>
