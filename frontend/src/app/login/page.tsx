@@ -25,7 +25,13 @@ export default function LoginPage() {
     const data = await res.json();
     if (res.ok) {
       localStorage.setItem("user", JSON.stringify({ id: data.id, name: data.name, role: data.role }));
-      router.push(data.role === "government" ? "/admin" : "/beneficiary");
+      const routes: Record<string, string> = {
+        government: "/admin",
+        vendor: "/vendor",
+        auditor: "/auditor",
+        beneficiary: "/beneficiary",
+      };
+      router.push(routes[data.role] || "/beneficiary");
     } else {
       setError(data.detail);
     }

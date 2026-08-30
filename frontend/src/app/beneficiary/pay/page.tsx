@@ -19,7 +19,7 @@ interface FundType {
 
 interface Vendor {
   id: number;
-  name: string;
+  business_name: string;
   category: string;
 }
 
@@ -62,7 +62,7 @@ export default function PayVendor() {
     setMessage('');
     setIsSubmitting(true);
 
-    const vendor = vendors.find(v => v.name === selectedVendor);
+    const vendor = vendors.find(v => v.business_name === selectedVendor);
     if (!vendor) { setMessage('Error: Vendor not found'); setIsSubmitting(false); return; }
 
     const ft = fundTypes.find(f => f.name === selectedCategory);
@@ -166,8 +166,8 @@ export default function PayVendor() {
                   {selectedCategory ? 'Select a vendor' : 'Select a category first'}
                 </option>
                 {availableVendors.map(v => (
-                  <option key={v.id} value={v.name} style={{ background: 'var(--bg-secondary)' }}>
-                    {v.name}
+                  <option key={v.id} value={v.business_name} style={{ background: 'var(--bg-secondary)' }}>
+                    {v.business_name}
                   </option>
                 ))}
               </select>

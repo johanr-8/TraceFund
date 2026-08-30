@@ -33,6 +33,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, role
     { name: 'Transaction Trail', path: '/auditor/trail' },
   ] : [
     { name: 'Issue Fund', path: '/admin' },
+    { name: 'Vendor Approval', path: '/admin/vendors' },
   ];
 
   const initials = user ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '?';

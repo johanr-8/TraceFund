@@ -1,0 +1,227 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "fundTypeId", "type": "uint256" },
+      { "indexed": false, "internalType": "string", "name": "name", "type": "string" }
+    ],
+    "name": "FundTypeAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "beneficiaryId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "fundTypeId", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "FundIssued",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "senderId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "vendorId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "fundTypeId", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "SpendingExecuted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "vendorId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "userId", "type": "uint256" },
+      { "indexed": false, "internalType": "string", "name": "businessName", "type": "string" },
+      { "indexed": false, "internalType": "string", "name": "category", "type": "string" }
+    ],
+    "name": "VendorRegistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "vendorId", "type": "uint256" }
+    ],
+    "name": "VendorApproved",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "userId", "type": "uint256" }
+    ],
+    "name": "registerUser",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "id", "type": "uint256" },
+      { "internalType": "string", "name": "name", "type": "string" }
+    ],
+    "name": "addFundType",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "vendorId", "type": "uint256" },
+      { "internalType": "uint256", "name": "userId", "type": "uint256" },
+      { "internalType": "string", "name": "businessName", "type": "string" },
+      { "internalType": "string", "name": "category", "type": "string" }
+    ],
+    "name": "registerVendor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "vendorId", "type": "uint256" }
+    ],
+    "name": "approveVendor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "beneficiaryId", "type": "uint256" },
+      { "internalType": "uint256", "name": "fundTypeId", "type": "uint256" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "issueFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "senderId", "type": "uint256" },
+      { "internalType": "uint256", "name": "vendorId", "type": "uint256" },
+      { "internalType": "uint256", "name": "fundTypeId", "type": "uint256" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "spend",
+    "outputs": [
+      { "internalType": "bool", "name": "success", "type": "bool" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "userId", "type": "uint256" },
+      { "internalType": "uint256", "name": "fundTypeId", "type": "uint256" }
+    ],
+    "name": "getBalance",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "txId", "type": "uint256" }
+    ],
+    "name": "getTransaction",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "uint256", "name": "id", "type": "uint256" },
+          { "internalType": "uint256", "name": "senderId", "type": "uint256" },
+          { "internalType": "uint256", "name": "vendorId", "type": "uint256" },
+          { "internalType": "uint256", "name": "fundTypeId", "type": "uint256" },
+          { "internalType": "uint256", "name": "amount", "type": "uint256" },
+          { "internalType": "enum TraceFundLedger.TransactionStatus", "name": "status", "type": "uint8" },
+          { "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+        ],
+        "internalType": "struct TraceFundLedger.TransactionRecord",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "vendorId", "type": "uint256" }
+    ],
+    "name": "getVendor",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "uint256", "name": "userId", "type": "uint256" },
+          { "internalType": "string", "name": "businessName", "type": "string" },
+          { "internalType": "string", "name": "category", "type": "string" },
+          { "internalType": "enum TraceFundLedger.VendorStatus", "name": "status", "type": "uint8" }
+        ],
+        "internalType": "struct TraceFundLedger.VendorInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      { "internalType": "address", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "registeredUsers",
+    "outputs": [
+      { "internalType": "bool", "name": "", "type": "bool" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "fundTypeCount",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "vendorCount",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "transactionCount",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

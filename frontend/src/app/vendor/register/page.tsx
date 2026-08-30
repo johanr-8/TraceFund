@@ -1,28 +1,56 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card/Card';
 import { Button } from '@/components/ui/Button/Button';
 import { Input } from '@/components/ui/Input/Input';
+import { API_URL } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 
 export default function VendorRegistration() {
   const router = useRouter();
   const [businessName, setBusinessName] = useState('');
-  const [address, setAddress] = useState('');
   const [category, setCategory] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [userId, setUserId] = useState<number | null>(null);
 
-  const handleRegister = (e: React.FormEvent) => {
+  useEffect(() => {
+    const raw = localStorage.getItem("user");
+    if (!raw) { router.push("/login"); return; }
+    const user = JSON.parse(raw);
+    setUserId(user.id);
+  }, [router]);
+
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     setIsSubmitting(true);
-    
-    // Simulate network delay
-    setTimeout(() => {
-      alert(`Vendor ${businessName} registered successfully under ${category}!`);
+
+    try {
+      const res = await fetch(`${API_URL}/vendors`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: userId,
+          business_name: businessName,
+          category: category,
+        }),
+      });
+
+      const data = await res.json();
       setIsSubmitting(false);
-      router.push('/vendor');
-    }, 1500);
+
+      if (res.ok) {
+        alert(`Vendor "${data.business_name}" registered successfully! Status: ${data.approval_status}`);
+        router.push('/vendor');
+      } else {
+        setError(data.detail || "Registration failed");
+      }
+    } catch {
+      setIsSubmitting(false);
+      setError("Network error. Is the backend running?");
+    }
   };
 
   return (
@@ -42,15 +70,6 @@ export default function VendorRegistration() {
               value={businessName}
               onChange={(e) => setBusinessName(e.target.value)}
               placeholder="Enter your registered business name"
-              required
-            />
-
-            <Input 
-              label="Business Address / Wallet Address" 
-              type="text" 
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="0x..."
               required
             />
 
@@ -80,15 +99,19 @@ export default function VendorRegistration() {
                 <option value="Food" style={{ background: 'var(--bg-secondary)' }}>Food & Groceries</option>
                 <option value="Medicine" style={{ background: 'var(--bg-secondary)' }}>Medicine & Healthcare</option>
                 <option value="Education" style={{ background: 'var(--bg-secondary)' }}>Education & Supplies</option>
-                <option value="Housing" style={{ background: 'var(--bg-secondary)' }}>Housing & Rent</option>
-                <option value="Electronics" style={{ background: 'var(--bg-secondary)' }}>Electronics</option>
               </select>
             </div>
 
-            <Button type="submit" fullWidth disabled={isSubmitting} style={{ marginTop: '1rem' }}>
+            <Button type="submit" fullWidth disabled={isSubmitting || !userId} style={{ marginTop: '1rem' }}>
               {isSubmitting ? 'Registering...' : 'Complete Registration'}
             </Button>
           </form>
+          {error && (
+            <p style={{ marginTop: "1rem", padding: "0.75rem 1rem", borderRadius: "var(--radius-md)",
+              background: "rgba(248, 113, 113, 0.15)", color: "var(--accent-danger)" }}>
+              {error}
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>

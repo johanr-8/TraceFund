@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, UniqueConstraint, Boolean
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -46,11 +46,13 @@ class Vendor(Base):
     __tablename__ = "vendors"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    business_name = Column(String, nullable=False)
     category = Column(String, nullable=False)
-    address = Column(String, default="")
-    approved = Column(Boolean, default=False)
+    approval_status = Column(String, default="pending")  # pending, approved, rejected
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    user = relationship("User")
 
 
 class Transaction(Base):
@@ -63,3 +65,17 @@ class Transaction(Base):
     amount = Column(Float, nullable=False)
     status = Column(String, default="Approved")
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    action = Column(String, nullable=False)
+    target_type = Column(String, nullable=False)  # user, vendor, fund, transaction
+    target_id = Column(Integer, nullable=True)
+    details = Column(String, default="")
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    user = relationship("User")

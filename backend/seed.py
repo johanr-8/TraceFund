@@ -28,12 +28,29 @@ if not db.query(User).filter(User.email == gov_email).first():
     print(f"Created government user: {gov_email} / admin123")
 
 if db.query(Vendor).count() == 0:
+    vendor_users = [
+        ("Fresh Grocers", "vendor1@tracefund.gov", "Food"),
+        ("City Pharmacy", "vendor2@tracefund.gov", "Medicine"),
+        ("PharmaCorp", "vendor3@tracefund.gov", "Medicine"),
+        ("National Bookstore", "vendor4@tracefund.gov", "Education"),
+        ("GreenMart", "vendor5@tracefund.gov", "Food"),
+    ]
+    for vname, vemail, vcat in vendor_users:
+        if not db.query(User).filter(User.email == vemail).first():
+            db.add(User(
+                name=vname,
+                email=vemail,
+                hashed_password=pwd_context.hash("vendor123"),
+                role="vendor",
+            ))
+    db.commit()
+
     vendors = [
-        Vendor(name="Fresh Grocers", category="Food", address="0x123...abc", approved=True),
-        Vendor(name="City Pharmacy", category="Medicine", address="0x456...def", approved=True),
-        Vendor(name="PharmaCorp", category="Medicine", address="0x789...ghi", approved=True),
-        Vendor(name="National Bookstore", category="Education", address="0xabc...123", approved=True),
-        Vendor(name="GreenMart", category="Food", address="0xdef...456", approved=True),
+        Vendor(user_id=db.query(User).filter(User.email == "vendor1@tracefund.gov").first().id, business_name="Fresh Grocers", category="Food", approval_status="approved"),
+        Vendor(user_id=db.query(User).filter(User.email == "vendor2@tracefund.gov").first().id, business_name="City Pharmacy", category="Medicine", approval_status="approved"),
+        Vendor(user_id=db.query(User).filter(User.email == "vendor3@tracefund.gov").first().id, business_name="PharmaCorp", category="Medicine", approval_status="approved"),
+        Vendor(user_id=db.query(User).filter(User.email == "vendor4@tracefund.gov").first().id, business_name="National Bookstore", category="Education", approval_status="approved"),
+        Vendor(user_id=db.query(User).filter(User.email == "vendor5@tracefund.gov").first().id, business_name="GreenMart", category="Food", approval_status="approved"),
     ]
     db.add_all(vendors)
     print(f"Added {len(vendors)} vendors")

@@ -77,26 +77,30 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 
 ## Development Status
 - [x] Backend project scaffold (FastAPI)
-- [x] Database schema / models (User, Wallet, FundType)
+- [x] Database schema / models (User, Wallet, FundType, Vendor, Transaction)
 - [ ] Solidity smart contracts
 - [ ] Web3.py integration
-- [ ] Rules Engine (basic category-match in issue-fund)
+- [x] Rules Engine — vendor category must match fund type + vendor approval_status check in `/spend`
 - [ ] Fraud Detection module
-- [x] REST API endpoints (register, login, issue-fund, fund-types, users, wallet)
+- [x] REST API endpoints (register, login, issue-fund, fund-types, users, wallet, vendors, spend, transactions)
 - [x] Frontend project scaffold
 - [x] Wallet Management UI (shows real backend data)
 - [x] Government Admin Dashboard UI (issue fund form)
 - [ ] Public Transparency Dashboard UI (mock data only)
-- [x] Vendor Registration UI (mock data only)
-- [ ] Vendor Approval UI
-- [x] Auditor Dashboard UI (mock data only)
+- [x] Vendor Registration UI (wired to real backend — creates pending vendor profile)
+- [x] Vendor Approval UI (admin page — lists pending vendors, approve button)
+- [x] Vendor Dashboard UI (shows real vendor profile + transactions from backend)
+- [x] Vendor Receive Payment UI (shows real vendor category from backend)
+- [x] Beneficiary Pay UI (wired to real backend — lists approved vendors, calls POST /spend)
+- [x] Beneficiary History UI (wired to real backend — GET /transactions)
+- [x] Login role-based routing (government→/admin, vendor→/vendor, auditor→/auditor, beneficiary→/beneficiary)
+- [ ] Auditor Dashboard UI (mock data only)
+- [x] Vendor model: user_id FK, business_name, category, approval_status (pending/approved/rejected)
+- [x] Seed script creates vendor users + approved vendor profiles
 
 ## Next Up (Priority Order)
-1. **Beneficiary → Spend flow** — wire `/beneficiary/pay` to a real backend endpoint. This is the core feature of the project's pitch. Needs: new `POST /spend` endpoint, Vendors table model, vendor registration backend.
-2. **Vendor registration backend** — `POST /vendors`, `GET /vendors` endpoints to support the spend flow.
-3. **Transaction history** — store transactions in DB, serve via API, display on `/beneficiary/history`.
-4. **Wire remaining mock pages to real backend** — `/public`, `/vendor/*`, `/auditor/*`
-5. **Blockchain integration** — Solidity contracts + Web3.py (future sprint)
+1. **Wire remaining mock pages to real backend** — `/public`, `/auditor/*`
+2. **Blockchain integration** — Solidity contracts + Web3.py (future sprint)
 
 ---
 
@@ -152,3 +156,19 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 - Removed unused default Next.js SVGs from public/
 - Updated favicon from Next.js default to custom emoji icon
 - Pushed to GitHub (https://github.com/johanr-8/TraceFund)
+
+### Session 5 (Vendor Registration + Approval + Mock Cleanup)
+- **Vendor model reworked**: `user_id` FK → users, `business_name` (was `name`), `approval_status` string (was `approved` bool), removed `address` field
+- **Backend endpoints**:
+  - `POST /vendors` — creates vendor with `approval_status='pending'`, validates user exists, prevents duplicate profiles
+  - `POST /vendors/{id}/approve` — changes pending → approved
+  - `GET /vendors` — now accepts `?status=`, `?user_id=`, `?category=` filters; defaults to approved only when no user_id
+  - `POST /spend` — added approval_status check before allowing transaction
+  - `/transactions` response uses `business_name`
+- **Vendor Approval UI** (`/admin/vendors`) — admin page lists pending vendors with Approve button, shows approved list
+- **Login routing fixed** — role-based redirects: government→/admin, vendor→/vendor, auditor→/auditor, beneficiary→/beneficiary
+- **Vendor Dashboard wired to real backend** — fetches vendor profile via `GET /vendors?user_id=X`, transactions via `GET /transactions?vendor_id=X`, shows real total settled + registration status + payment history
+- **Vendor Receive Payment wired to real backend** — fetches real business name + category
+- **Seed script updated** — creates vendor user accounts with FK-linked vendor profiles, all pre-approved
+- **Removed mock data** from vendor dashboard and receive pages (MOCK_VENDOR_TXS, MOCK_VENDORS no longer imported)
+- Old DB deleted and re-seeded with new schema
