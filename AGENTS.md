@@ -259,6 +259,16 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 - **Empty Wallet State**: Added clean notification panel for users without allocated funds.
 - **Verified Build**: Successfully compiled with Next.js Turbopack (`npm run build`).
 
+### Session 15 (Sparkle Star Accent Removal & Polish)
+- **Global Polish**: Removed the glowing 4-point sparkle star SVG accent across the Landing Page (`/`), Login Page (`/login`), Register Page (`/register`), and Beneficiary Dashboard (`/beneficiary`).
+- **Verified Build**: Successfully compiled with Next.js Turbopack (`npm run build`).
+
+### Session 16 (Beneficiary Sidebar Navigation Update)
+- **Sidebar Cleanup**: Removed `Dashboard` and `Settings` navigation items from the beneficiary sidebar menu in `DashboardLayout.tsx`.
+- **Retained Beneficiary Nav Links**: `Wallet` (`/beneficiary`), `Transactions` (`/beneficiary/history`), `Pay Vendors` (`/beneficiary/pay`).
+- **Verified Build**: Successfully compiled with Next.js Turbopack (`npm run build`).
+
+
 
 
 
