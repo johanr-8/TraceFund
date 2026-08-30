@@ -57,6 +57,14 @@ class LoginPayload(BaseModel):
     password: str
 
 
+class CreateStaffPayload(BaseModel):
+    """Payload for a government admin creating another government/auditor account."""
+    name: str
+    email: str
+    password: str
+    role: str
+
+
 class IssueFundPayload(BaseModel):
     beneficiary_id: int
     fund_type_id: int
@@ -87,6 +95,9 @@ def root():
 
 
 VALID_ROLES = {"government", "beneficiary", "vendor", "auditor"}
+# Roles that can self-register publicly. Government and auditor accounts are
+# created only by an existing government admin (see POST /admin/users).
+SELF_REGISTER_ROLES = {"beneficiary", "vendor"}
 
 @app.post("/register")
 def register(payload: RegisterPayload, db: Session = Depends(get_db)):
@@ -96,6 +107,8 @@ def register(payload: RegisterPayload, db: Session = Depends(get_db)):
 
     if payload.role not in VALID_ROLES:
         raise HTTPException(status_code=400, detail="Invalid role")
+    if payload.role not in SELF_REGISTER_ROLES:
+        raise HTTPException(status_code=400, detail="Self-registration is only available for beneficiaries and vendors")
     if len(payload.password) < 4:
         raise HTTPException(status_code=400, detail="Password must be at least 4 characters")
 
@@ -114,6 +127,39 @@ def register(payload: RegisterPayload, db: Session = Depends(get_db)):
 
     # Audit log
     log_audit(db, user.id, "register", "user", user.id, f"role={user.role}")
+
+    return {"id": user.id, "name": user.name, "email": user.email, "role": user.role}
+
+
+# Staff roles that a government admin may provision. Beneficiaries and vendors
+# self-register via POST /register instead.
+STAFF_ROLES = {"government", "auditor"}
+
+
+@app.post("/admin/users")
+def create_staff_user(payload: CreateStaffPayload, db: Session = Depends(get_db)):
+    """Allow a government admin to create additional government and auditor accounts."""
+    if payload.role not in STAFF_ROLES:
+        raise HTTPException(status_code=400, detail="Admin can only create government or auditor accounts")
+
+    existing = db.query(User).filter(User.email == payload.email).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    if len(payload.password) < 4:
+        raise HTTPException(status_code=400, detail="Password must be at least 4 characters")
+
+    user = User(
+        name=payload.name,
+        email=payload.email,
+        hashed_password=pwd_context.hash(payload.password),
+        role=payload.role,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    bridge.register_user(user.id)
+    log_audit(db, user.id, "admin_create_user", "user", user.id, f"role={user.role}")
 
     return {"id": user.id, "name": user.name, "email": user.email, "role": user.role}
 
