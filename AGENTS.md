@@ -88,6 +88,7 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 - [x] Wallet Management UI (shows real backend data)
 - [x] Government Admin Dashboard UI (issue fund form)
 - [x] Public Transparency Dashboard UI (wired to real backend — `GET /public/stats` on `/public`)
+- [ ] Public Transparency Dashboard UI (mock data only — `/public` page)
 - [x] Vendor Registration UI (wired to real backend — creates pending vendor profile)
 - [x] Vendor Approval UI (admin page — lists pending/approved/rejected vendors, approve + reject buttons)
 - [x] Vendor Dashboard UI (shows real vendor profile + transactions from backend)
@@ -104,6 +105,7 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 
 ## Next Up (Priority Order)
 1. ~~**Wire remaining mock pages to real backend**~~ — Done (`/public`, `/auditor/*`, `/admin/vendors` reject, `/vendor/settings` all wired)
+1. **Wire remaining mock pages to real backend** — `/public`, `/auditor/*`
 2. ~~**Blockchain integration**~~ — Done (Solidity + Web3.py, feature-flagged)
 
 ---
