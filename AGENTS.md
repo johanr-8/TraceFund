@@ -77,16 +77,17 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 
 ## Development Status
 - [x] Backend project scaffold (FastAPI)
-- [x] Database schema / models (User, Wallet, FundType, Vendor, Transaction)
-- [ ] Solidity smart contracts
-- [ ] Web3.py integration
+- [x] Database schema / models (User, Wallet, FundType, Vendor, Transaction, AuditLog)
+- [x] Solidity smart contract (`TraceFundLedger.sol`) — on-chain fund issuance, spending enforcement, vendor management
+- [x] Web3.py integration (`blockchain/web3_bridge.py`) — bridge with feature flag (`BLOCKCHAIN_ENABLED=false` by default)
 - [x] Rules Engine — vendor category must match fund type + vendor approval_status check in `/spend`
-- [ ] Fraud Detection module
-- [x] REST API endpoints (register, login, issue-fund, fund-types, users, wallet, vendors, spend, transactions)
+- [ ] Fraud Detection module (not required for now)
+- [x] Audit logging — auto-logs on register, issue-fund, spend, approve, reject
+- [x] REST API endpoints — 20+ endpoints (see full list below)
 - [x] Frontend project scaffold
 - [x] Wallet Management UI (shows real backend data)
 - [x] Government Admin Dashboard UI (issue fund form)
-- [ ] Public Transparency Dashboard UI (mock data only)
+- [ ] Public Transparency Dashboard UI (mock data only — `/public` page)
 - [x] Vendor Registration UI (wired to real backend — creates pending vendor profile)
 - [x] Vendor Approval UI (admin page — lists pending vendors, approve button)
 - [x] Vendor Dashboard UI (shows real vendor profile + transactions from backend)
@@ -100,7 +101,7 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 
 ## Next Up (Priority Order)
 1. **Wire remaining mock pages to real backend** — `/public`, `/auditor/*`
-2. **Blockchain integration** — Solidity contracts + Web3.py (future sprint)
+2. ~~**Blockchain integration**~~ — Done (Solidity + Web3.py, feature-flagged)
 
 ---
 
@@ -172,3 +173,27 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 - **Seed script updated** — creates vendor user accounts with FK-linked vendor profiles, all pre-approved
 - **Removed mock data** from vendor dashboard and receive pages (MOCK_VENDOR_TXS, MOCK_VENDORS no longer imported)
 - Old DB deleted and re-seeded with new schema
+
+### Session 6 (Blockchain + Backend Logic Complete)
+- **Solidity Smart Contract** (`blockchain/contracts/TraceFundLedger.sol`):
+  - On-chain user/vendor registration
+  - Fund issuance (government → beneficiary wallet)
+  - Spending with auto-enforcement: category match + vendor approval + balance check
+  - All transactions immutably logged with timestamps
+  - Role-based access (only owner/backend can call write functions)
+- **Web3.py Bridge** (`blockchain/web3_bridge.py`):
+  - Wraps all contract calls: `register_user`, `add_fund_type`, `register_vendor`, `approve_vendor`, `issue_fund`, `spend`, `get_balance`, `get_transaction`
+  - Graceful no-ops when `BLOCKCHAIN_ENABLED=false` (returns `None`)
+  - Config via `.env` — RPC URL, private key, contract address, chain ID
+- **Blockchain config** (`blockchain/config.py`, `blockchain/.env.example`, `blockchain/abis/TraceFundLedger.json`)
+- **AuditLog model** — `user_id`, `action`, `target_type`, `target_id`, `details`, `created_at`
+- **Auto audit logging** on: register, issue-fund, spend, register-vendor, approve-vendor, reject-vendor
+- **Vendor reject endpoint** — `POST /vendors/{vendor_id}/reject` (pending → rejected)
+- **Fund type CRUD** — `POST /fund-types`, `PUT /fund-types/{id}`, `DELETE /fund-types/{id}` (blocked if in use)
+- **Dashboard stats** — `GET /stats` (user counts, issued/spent totals, fund type breakdown)
+- **Public transparency** — `GET /public/stats` (aggregate category-wise utilization, no personal data)
+- **Single transaction detail** — `GET /transactions/{id}` (with sender + vendor names)
+- **Vendor settlement** — `GET /vendors/{id}/settlement` (total received, tx count, category breakdown)
+- **Blockchain status endpoints** — `GET /blockchain/status`, `/blockchain/balance/{user_id}/{fund_type_id}`, `/blockchain/transaction/{tx_id}`
+- **requirements.txt updated** — added `web3==7.12.0`
+- **main.py updated** — 343 lines, 20+ endpoints, blockchain bridge integration
