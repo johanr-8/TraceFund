@@ -22,67 +22,102 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, role
   }, [router]);
 
   const links = role === 'beneficiary' ? [
-    { name: 'Wallet', path: '/beneficiary' },
-    { name: 'Pay Vendor', path: '/beneficiary/pay' },
+    { name: 'Wallet', path: '/beneficiary', icon: '💳' },
+    { name: 'Transactions', path: '/beneficiary/history', icon: '⇄' },
+    { name: 'Pay Vendors', path: '/beneficiary/pay', icon: '👥' },
   ] : role === 'vendor' ? [
-    { name: 'Dashboard', path: '/vendor' },
-    { name: 'Receive Payment', path: '/vendor/receive' },
-    { name: 'Register Business', path: '/vendor/register' },
+    { name: 'Dashboard', path: '/vendor', icon: '📊' },
+    { name: 'Receive Payment', path: '/vendor/receive', icon: '📥' },
+    { name: 'Register Business', path: '/vendor/register', icon: '🏢' },
+    { name: 'Settings', path: '/vendor/settings', icon: '⚙️' },
   ] : role === 'auditor' ? [
-    { name: 'Fraud Dashboard', path: '/auditor' },
-    { name: 'Transaction Trail', path: '/auditor/trail' },
+    { name: 'Fraud Dashboard', path: '/auditor', icon: '🛡️' },
+    { name: 'Transaction Trail', path: '/auditor/trail', icon: '📜' },
   ] : [
-    { name: 'Issue Fund', path: '/admin' },
-    { name: 'Vendor Approval', path: '/admin/vendors' },
+    { name: 'Issue Fund', path: '/admin', icon: '🏛️' },
+    { name: 'Vendor Approval', path: '/admin/vendors', icon: '✅' },
   ];
 
-  const initials = user ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '?';
+  const initials = user
+    ? user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    : '?';
 
   return (
     <div className={styles.layout}>
+      {/* Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.logo}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#paint0_linear)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            <defs>
-              <linearGradient id="paint0_linear" x1="6" y1="2" x2="17" y2="22" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#6366f1" />
-                <stop offset="1" stopColor="#a855f7" />
-              </linearGradient>
-            </defs>
-          </svg>
+          <span style={{ color: '#00E5FF', fontWeight: 800, marginRight: '4px' }}>$</span>
           <span>TraceFund</span>
         </div>
         <nav className={styles.nav}>
           {links.map((link) => {
-            const isActive = pathname === link.path || (pathname?.startsWith(link.path) && link.path !== `/${role}`);
+            const isActive = pathname === link.path;
             return (
               <Link
-                key={link.path}
+                key={link.name + link.path}
                 href={link.path}
                 className={`${styles.navLink} ${isActive ? styles.navLinkActive : ''}`}
               >
-                {link.name}
+                <span style={{ opacity: 0.8, fontSize: '1rem' }}>{link.icon}</span>
+                <span>{link.name}</span>
               </Link>
             );
           })}
         </nav>
       </aside>
 
+      {/* Main Container */}
       <main className={styles.main}>
+        {/* Top Navbar */}
         <header className={styles.header}>
-          <div className={styles.userProfile}>
-            <span>{user ? `${user.name} (${user.role})` : 'Loading...'}</span>
-            <div className={styles.avatar}>{initials}</div>
-            <button onClick={() => { localStorage.removeItem("user"); router.push("/"); }} style={{ marginLeft: '1rem', fontSize: '0.875rem', color: 'var(--accent-danger)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-family)' }}>
+          <div className={styles.headerRightControls}>
+            {/* Notifications */}
+            <div className={styles.headerControlItem}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span>Notifications</span>
+            </div>
+
+            {/* Help */}
+            <div className={styles.headerControlItem}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              <span>Help</span>
+            </div>
+
+            {/* User Profile Pill */}
+            <div className={styles.userProfilePill}>
+              <span>{user ? `${user.name} (${user.role})` : 'Loading...'}</span>
+              <div className={styles.avatarCircle}>{initials}</div>
+            </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={() => {
+                localStorage.removeItem('user');
+                router.push('/');
+              }}
+              className={styles.logoutPillBtn}
+            >
               Logout
             </button>
           </div>
         </header>
+
+        {/* Content Body */}
         <div className={styles.content}>
-          <div className="animate-fade-in">
-            {children}
-          </div>
+          <div className="animate-fade-in">{children}</div>
         </div>
       </main>
     </div>

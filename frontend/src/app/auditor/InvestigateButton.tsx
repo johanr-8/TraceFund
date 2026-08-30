@@ -83,15 +83,34 @@ export function InvestigateButton({ txId }: Props) {
         ) : report ? (
           <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             
+            <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)', fontSize: '0.9rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Vendor</span>
+                <span style={{ fontWeight: 600 }}>{report.tx.vendor_name}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Beneficiary</span>
+                <span style={{ fontWeight: 600 }}>{report.tx.sender_name}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Category</span>
+                <span style={{ fontWeight: 600 }}>{report.tx.fund_type}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Amount</span>
+                <span style={{ fontWeight: 600 }}>₹{report.tx.amount.toFixed(2)}</span>
+              </div>
+            </div>
+
             <div style={{ display: 'flex', gap: '1rem' }}>
               <div style={{ flex: 1, padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(248, 113, 113, 0.2)' }}>
                 <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Risk Score</p>
                 <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--accent-danger)' }}>{report.riskScore}</p>
               </div>
               <div style={{ flex: 1, padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)' }}>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Status</p>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Review Status</p>
                 <p style={{ fontSize: '1.25rem', fontWeight: 600, color: report.status === 'Frozen' ? 'var(--accent-danger)' : report.status === 'Dismissed' ? 'var(--accent-success)' : 'var(--text-primary)', marginTop: '0.5rem' }}>
-                  {report.status}
+                  {report.status === 'Frozen' ? 'Frozen' : report.status === 'Dismissed' ? 'Reviewed' : 'Pending Review'}
                 </p>
               </div>
             </div>
