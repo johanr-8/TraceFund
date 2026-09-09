@@ -102,11 +102,22 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 - [x] Vendor Settings UI (wired to real backend — real business name/category/approval-status; contact email persisted to localStorage since backend has no vendor-update endpoint)
 - [x] Vendor model: user_id FK, business_name, category, approval_status (pending/approved/rejected)
 - [x] Seed script creates vendor users + approved vendor profiles
+- [x] Government Fund Types Management UI (`/admin/fund-types` — CRUD table + create/edit/delete inline)
+- [x] Government Dashboard Stats UI (`/admin/stats` — user counts, issued/spent totals, fund type breakdown with utilization bars)
+- [x] Government Transaction Monitoring UI (`/admin/transactions` — full list with filter, detail modal)
+- [x] Auditor Audit Log Viewer UI (`/auditor/logs` — filterable by action type, refresh, color-coded badges)
+- [x] Beneficiary Profile/Account UI (`/beneficiary/profile` — user info card, wallet summary, category balances)
+- [x] Beneficiary Notifications UI (`/beneficiary/notifications` — transaction-based notification cards with relative timestamps)
+- [x] Sidebar nav updated — Government: 5 links, Auditor: 3, Beneficiary: 5
+- [x] Landing page cleanup — removed decorative "Portal-line" / "Light-line" badge text from portal cards
 
 ## Next Up (Priority Order)
-1. ~~**Wire remaining mock pages to real backend**~~ — Done (`/public`, `/auditor/*`, `/admin/vendors` reject, `/vendor/settings` all wired)
-1. **Wire remaining mock pages to real backend** — `/public`, `/auditor/*`
+1. ~~**Wire remaining mock pages to real backend**~~ — Done
 2. ~~**Blockchain integration**~~ — Done (Solidity + Web3.py, feature-flagged)
+3. Vendor: Transaction detail view, settlement reports UI
+4. Auditor: Flag resolution persistence (FraudFlags table + backend endpoints)
+5. Government: Bulk fund issuance
+6. Auth: JWT / server-side sessions
 
 ---
 
@@ -267,6 +278,17 @@ Issue funds as **programmable digital tokens** with spending rules embedded in t
 - **Sidebar Cleanup**: Removed `Dashboard` and `Settings` navigation items from the beneficiary sidebar menu in `DashboardLayout.tsx`.
 - **Retained Beneficiary Nav Links**: `Wallet` (`/beneficiary`), `Transactions` (`/beneficiary/history`), `Pay Vendors` (`/beneficiary/pay`).
 - **Verified Build**: Successfully compiled with Next.js Turbopack (`npm run build`).
+
+### Session 17 (6 New Pages + Landing Page Cleanup)
+- **Government Fund Types Management** (`/admin/fund-types`): CRUD table with inline create form, edit, and delete. Backend validation (blocks delete if in use). Uses `GET/POST/PUT/DELETE /fund-types`.
+- **Government Dashboard Stats** (`/admin/stats`): 6 stat cards (total users, beneficiaries, vendors, issued/spent, transactions), fund type breakdown table with utilization progress bars. Uses `GET /stats`.
+- **Government Transaction Monitoring** (`/admin/transactions`): Full transaction list with filter by category/status, View detail modal showing beneficiary/vendor/category/amount/status/date. Uses `GET /transactions` + `GET /transactions/{id}`.
+- **Auditor Audit Log Viewer** (`/auditor/logs`): Filterable by action type, refresh button, color-coded action badges, timestamped entries. Uses `GET /audit-logs?action=`.
+- **Beneficiary Profile/Account** (`/beneficiary/profile`): User info card with avatar initials, total wallet balance, category balances list, account details grid. Uses `GET /wallet/{user_id}` + localStorage.
+- **Beneficiary Notifications** (`/beneficiary/notifications`): Transaction-based notification cards with relative timestamps ("2h ago"), status badges, empty state with bell icon. Uses `GET /transactions?user_id=`.
+- **Sidebar Navigation Updated**: Government now has 5 links (Issue Fund, Vendor Approval, Fund Types, Transactions, Dashboard Stats), Auditor 3 (Fraud Dashboard, Transaction Trail, Audit Logs), Beneficiary 5 (Wallet, Transactions, Pay Vendors, Notifications, Profile).
+- **Landing Page Cleanup**: Removed decorative "Portal-line" / "Light-line" badge text and label rows from all 4 portal cards (Beneficiary, Vendor, Auditor, Public Transparency).
+- **Verified Build**: Successfully compiled with Next.js Turbopack (`npm run build`) — 24 routes total.
 
 
 

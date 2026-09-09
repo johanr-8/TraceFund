@@ -176,10 +176,6 @@ export default function Home() {
                 </div>
                 <span className="portal-card-title">Beneficiary</span>
               </div>
-              <div className="portal-card-badge-row">
-                <span className="portal-badge-label">Active Wallet</span>
-                <span className="portal-badge-value">Portal-line</span>
-              </div>
             </Link>
 
             {/* Portal Card 2: Vendor */}
@@ -193,10 +189,6 @@ export default function Home() {
                 </div>
                 <span className="portal-card-title">Vendor</span>
               </div>
-              <div className="portal-card-badge-row">
-                <span className="portal-badge-label">Settlements</span>
-                <span className="portal-badge-value">Light-line</span>
-              </div>
             </Link>
 
             {/* Portal Card 3: Auditor */}
@@ -208,10 +200,6 @@ export default function Home() {
                   </svg>
                 </div>
                 <span className="portal-card-title">Auditor</span>
-              </div>
-              <div className="portal-card-badge-row">
-                <span className="portal-badge-label">Fraud Checks</span>
-                <span className="portal-badge-value">Light-line</span>
               </div>
             </Link>
 
@@ -226,10 +214,6 @@ export default function Home() {
                   </svg>
                 </div>
                 <span className="portal-card-title">Public Transparency</span>
-              </div>
-              <div className="portal-card-badge-row">
-                <span className="portal-badge-label">Utilization</span>
-                <span className="portal-badge-value">Light-line</span>
               </div>
             </Link>
           </div>

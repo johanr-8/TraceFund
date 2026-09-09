@@ -25,6 +25,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, role
     { name: 'Wallet', path: '/beneficiary', icon: '💳' },
     { name: 'Transactions', path: '/beneficiary/history', icon: '⇄' },
     { name: 'Pay Vendors', path: '/beneficiary/pay', icon: '👥' },
+    { name: 'Notifications', path: '/beneficiary/notifications', icon: '🔔' },
+    { name: 'Profile', path: '/beneficiary/profile', icon: '👤' },
   ] : role === 'vendor' ? [
     { name: 'Dashboard', path: '/vendor', icon: '📊' },
     { name: 'Receive Payment', path: '/vendor/receive', icon: '📥' },
@@ -33,9 +35,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, role
   ] : role === 'auditor' ? [
     { name: 'Fraud Dashboard', path: '/auditor', icon: '🛡️' },
     { name: 'Transaction Trail', path: '/auditor/trail', icon: '📜' },
+    { name: 'Audit Logs', path: '/auditor/logs', icon: '📋' },
   ] : [
     { name: 'Issue Fund', path: '/admin', icon: '🏛️' },
     { name: 'Vendor Approval', path: '/admin/vendors', icon: '✅' },
+    { name: 'Fund Types', path: '/admin/fund-types', icon: '📁' },
+    { name: 'Transactions', path: '/admin/transactions', icon: '📊' },
+    { name: 'Dashboard Stats', path: '/admin/stats', icon: '📈' },
   ];
 
   const initials = user
